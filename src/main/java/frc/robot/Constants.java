@@ -44,7 +44,7 @@ public interface Constants {
         boolean invertGyro = true; // Always ensure Gyro is CCW+ CW-
 
         COTSTalonFXSwerveConstants chosenModule =
-                COTSTalonFXSwerveConstants.SDS.MK4i.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);
+                COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L3);
 
         /* Drivetrain Constants */
         double trackWidth = Units.inchesToMeters(20.5);
@@ -121,9 +121,9 @@ public interface Constants {
          * Constants for the Front Left Module - Module 0
          */
         interface Mod0 {
-            int driveMotorID = 0;
-            int angleMotorID = 4;
-            int canCoderID = 0;
+            int driveMotorID = 13;
+            int angleMotorID = 12;
+            int canCoderID = 20;
             Rotation2d angleOffset = Rotation2d.fromDegrees(138.58);
             SwerveModuleConstants constants =
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
@@ -133,8 +133,8 @@ public interface Constants {
          * Constants for the Front Right Module - Module 1
          */
         interface Mod1 {
-            int driveMotorID = 1;
-            int angleMotorID = 5;
+            int driveMotorID = 5;
+            int angleMotorID = 4;
             int canCoderID = 1;
             Rotation2d angleOffset = Rotation2d.fromDegrees(204.84);
             SwerveModuleConstants constants =
@@ -145,9 +145,9 @@ public interface Constants {
          * Constants for the Back Left Module - Module 2
          */
         interface Mod2 {
-            int driveMotorID = 2;
-            int angleMotorID = 6;
-            int canCoderID = 2;
+            int driveMotorID = 11;
+            int angleMotorID = 10;
+            int canCoderID = 21;
             Rotation2d angleOffset = Rotation2d.fromDegrees(115.35);
             SwerveModuleConstants constants =
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
@@ -157,9 +157,9 @@ public interface Constants {
          * Constants for the Back Right Module - Module 3
          */
         interface Mod3 {
-            int driveMotorID = 3;
-            int angleMotorID = 7;
-            int canCoderID = 3;
+            int driveMotorID = 7;
+            int angleMotorID = 6;
+            int canCoderID = 2;
             Rotation2d angleOffset = Rotation2d.fromDegrees(213.43);
             SwerveModuleConstants constants =
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
@@ -241,8 +241,8 @@ public interface Constants {
     }
 
     interface ShooterConstants {
-        int SHOOTER_TOP_MOTOR_ID = 11;
-        int SHOOTER_BOTTOM_MOTOR_ID = 10;
+        int SHOOTER_TOP_MOTOR_ID = 18;
+        int SHOOTER_BOTTOM_MOTOR_ID = 16;
 
         double SHOOTER_MAX_ROTATIONS_PER_SECOND = 6350.0 / 60.0;
         double SHOOTER_METERS_PER_ROTATION = Units.inchesToMeters(12.564); // currently is exactly gear ratio is 1:1 with 4" wheel
@@ -254,12 +254,12 @@ public interface Constants {
     }
 
     interface NotePlayerConstants {
-        int INTAKE_MOTOR_ID = 12;
-        int INDEXER_MOTOR_ID = 3;
+        int INTAKE_MOTOR_ID = 14;
+        int INDEXER_MOTOR_ID = 15;
 
-        int ARM_LEFT_MOTOR_ID = 1;
-        int ARM_RIGHT_MOTOR_ID = 2;
-        int ARM_CAN_CODER_ID = 4;
+        int ARM_LEFT_MOTOR_ID = 12;
+        int ARM_RIGHT_MOTOR_ID = 19;
+        int ARM_CAN_CODER_ID = 3;
         float ARM_MAX_LIMIT = 10.2f;
         float ARM_MIN_LIMIT = -12f;
 
