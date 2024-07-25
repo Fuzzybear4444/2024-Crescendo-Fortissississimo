@@ -124,7 +124,7 @@ public interface Constants {
             int driveMotorID = 13;
             int angleMotorID = 12;
             int canCoderID = 20;
-            Rotation2d angleOffset = Rotation2d.fromDegrees(138.58);
+            Rotation2d angleOffset = Rotation2d.fromRotations(.423828);
             SwerveModuleConstants constants =
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -136,7 +136,7 @@ public interface Constants {
             int driveMotorID = 5;
             int angleMotorID = 4;
             int canCoderID = 1;
-            Rotation2d angleOffset = Rotation2d.fromDegrees(204.84);
+            Rotation2d angleOffset = Rotation2d.fromRotations(.47168);
             SwerveModuleConstants constants =
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -148,7 +148,7 @@ public interface Constants {
             int driveMotorID = 11;
             int angleMotorID = 10;
             int canCoderID = 21;
-            Rotation2d angleOffset = Rotation2d.fromDegrees(115.35);
+            Rotation2d angleOffset = Rotation2d.fromRotations(.307617);
             SwerveModuleConstants constants =
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -160,7 +160,7 @@ public interface Constants {
             int driveMotorID = 7;
             int angleMotorID = 6;
             int canCoderID = 2;
-            Rotation2d angleOffset = Rotation2d.fromDegrees(213.43);
+            Rotation2d angleOffset = Rotation2d.fromRotations(.202393);
             SwerveModuleConstants constants =
                     new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -245,7 +245,7 @@ public interface Constants {
         int SHOOTER_BOTTOM_MOTOR_ID = 16;
 
         double SHOOTER_MAX_ROTATIONS_PER_SECOND = 6350.0 / 60.0;
-        double SHOOTER_METERS_PER_ROTATION = Units.inchesToMeters(12.564); // currently is exactly gear ratio is 1:1 with 4" wheel
+        double SHOOTER_METERS_PER_ROTATION = (22d/12d)*Units.inchesToMeters(12.564); // currently is exactly gear ratio is 1:1 with 4" wheel
         double shooterKS = 0.01;
         double shooterKV = 0.348;
         double shooterKA = 0.15;
@@ -260,16 +260,16 @@ public interface Constants {
         int ARM_LEFT_MOTOR_ID = 12;
         int ARM_RIGHT_MOTOR_ID = 19;
         int ARM_CAN_CODER_ID = 3;
-        float ARM_MAX_LIMIT = 10.2f;
-        float ARM_MIN_LIMIT = -12f;
+        float ARM_MAX_LIMIT = 13.1f;
+        float ARM_MIN_LIMIT = -9.0f;
 
-        double ARM_BALANCE_DEGREES = -39.6;
+        double ARM_BALANCE_DEGREES = -60.47;
         double ARM_COG_PERPENDICULAR_DEGREES = ARM_BALANCE_DEGREES + 90;
-        double ARM_PICKUP_ANGLE = 64;
+        double ARM_PICKUP_ANGLE = 53.5;
         double ARM_SHOOTING_ANGLE = 48;
-        double ARM_AMP_ANGLE = -48;
+        double ARM_AMP_ANGLE = -5;
         double ARM_UNDER_STAGE_ANGLE_THRESHOLD = 50;
-        double ARM_MOTOR_ROTATIONS_PER_SHOOTER_DEGREE = -0.176225568;
+        double ARM_GEAR_RATIO = 0.0158730158730158;
 
         /** The allowed error of the position in degrees*/
         double ARM_POSITION_ERROR_TOLERANCE = 2;
@@ -285,16 +285,16 @@ public interface Constants {
         double TRAJECTORY_DEFAULT_INITIAL_ANGLE = 21.7;
 
         interface ArmUpwardsHighGravityPID {
-            double p = 0.36;
-            double i = 0.000035;
-            double d = 0.05;
+            double p = 0.13; //.15 //36
+            double i = 0.000009; //.000035
+            double d = 0.005; //.05
             double iZ = 3.0;
 
             double maxOutput = 0.48;
             double minOutput = -0.48;
         }
         interface ArmUpwardsLowGravityPID {
-            double p = 0.1;
+            double p = 0.09;
             double i = 0.0;
             double d = 0.0;
             double iZ = 0.0;
@@ -326,8 +326,8 @@ public interface Constants {
         int ELEVATOR_MOTOR_1_ID = 8;
         int ELEVATOR_MOTOR_2_ID = 9;
 
-        double ELEVATOR_MOTOR_LOWER_LIMIT_POS = 0.0;
-        double ELEVATOR_MOTOR_UPPER_LIMIT_POS = 28.5;
+        double ELEVATOR_MOTOR_LOWER_LIMIT_POS = 0.368164;
+        double ELEVATOR_MOTOR_UPPER_LIMIT_POS = 18.875488; //28.5
 
         double ELEVATOR_MAX_ROTATIONS_PER_SECOND = 6350.0 / 60.0;
 

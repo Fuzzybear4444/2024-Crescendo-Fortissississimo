@@ -219,6 +219,14 @@ public class NotePlayerSubsystem extends SubsystemBase implements Constants.Note
                 /*)*/.withName("IntakeNote");
     }
 
+    public Command overrideBeamBreak() {
+        return new InstantCommand(() -> indexer.BeamBreak = true);
+    }
+
+    public Command fixBeamBreak() {
+        return new InstantCommand(() -> indexer.BeamBreak = false);
+    }
+
     public Command reverseEject() {
         return new InstantCommand(() -> {
             RobotState.getInstance().setShooterMode(ShooterMode.EJECT);
@@ -234,6 +242,21 @@ public class NotePlayerSubsystem extends SubsystemBase implements Constants.Note
                     indexer.stop();
                     intake.stop();
                     shooter.stop();
+                }
+        ));
+    }
+
+ public Command shootInAmp() {
+        return new InstantCommand(() -> {
+            RobotState.getInstance().setShooterMode(ShooterMode.EJECT);
+            indexer.setEnableHardLimit(false);
+        }).andThen(new RunCommand(
+                () -> {
+                    indexer.spin(-0.45);
+                }
+        ).finallyDo(
+                () -> {
+                    indexer.stop();
                 }
         ));
     }
@@ -286,13 +309,14 @@ public class NotePlayerSubsystem extends SubsystemBase implements Constants.Note
     }
 
     public void shootFromSubwoofer() {
-        shooter.spinMetersPerSecond(26, 4);//22, 4);
+        shooter.spinMetersPerSecond(22, 22);//22, 4);
     }
 
     public Command shootFromSubwooferCommand() {
+        //return new RunCommand(() -> shooter.spinMetersPerSecond(22,22)).finallyDo(shooter::stop);
         return new InstantCommand(() -> RobotState.getInstance().setShooterMode(ShooterMode.SPEAKER))
-                .andThen(new RunCommand(this::shootFromSubwoofer))
-                .finallyDo(() -> shooter.stop());
+        .andThen(new RunCommand(this::shootFromSubwoofer)).onlyWhile(indexer::noteInIndexer)
+        .finallyDo(() -> finishShooting());
     }
 
     public Command pullNoteIntoIndexer() {
@@ -329,6 +353,11 @@ public class NotePlayerSubsystem extends SubsystemBase implements Constants.Note
         ).finallyDo(() -> shooter.stop());
     }
 
+    public Command stopShooter() {
+        return new RunCommand(
+            () -> shooter.stop());
+    }
+
     public Command aimAndSpinUpForSpeaker() {
         return (new RunCommand(
                 () -> {
@@ -347,6 +376,21 @@ public class NotePlayerSubsystem extends SubsystemBase implements Constants.Note
                         }
                 ).onlyIf(indexer::noteInIndexer).onlyWhile(indexer::noteInIndexer)
                 .withName("AimAndSpinUpForSpeaker");
+    }  
+
+    public Command shootNote() {
+       return new InstantCommand(() -> {
+            //RobotState.getInstance().setShooterMode(ShooterMode.EJECT);
+            indexer.setEnableHardLimit(false);
+        }).andThen(new RunCommand(
+                () -> feedNoteToShooter()
+        ).onlyWhile(indexer::noteInIndexer).finallyDo(
+                () -> {
+                    indexer.stop();
+                    intake.stop();
+                    shooter.stop();
+                }
+        ));
     }
 
     public Command scoreNote() {
@@ -377,6 +421,10 @@ public class NotePlayerSubsystem extends SubsystemBase implements Constants.Note
                 .onlyIf(indexer::noteInIndexer)
                 .onlyWhile(indexer::noteInIndexer)
                 .withName("PrepForAmp");
+    }
+
+    public Command stopIndexer() {
+        return new InstantCommand(() -> indexer.stop());
     }
 
     public Command scoreAmp() {

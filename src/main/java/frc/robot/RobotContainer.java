@@ -20,7 +20,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.bluecrew.util.RobotState;
 import frc.robot.autos.AutonomousCommandsBuilder;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.noteplayer.IndexerModule;
 import frc.robot.subsystems.noteplayer.NotePlayerSubsystem;
+import frc.robot.subsystems.noteplayer.ShooterModule;
 import frc.robot.subsystems.swervedrive.SwerveDrive;
 
 import java.util.Objects;
@@ -28,6 +30,7 @@ import java.util.function.BooleanSupplier;
 
 import frc.robot.commands.*;
 
+import static frc.robot.Constants.NotePlayerConstants.ARM_AMP_ANGLE;
 import static frc.robot.Constants.NotePlayerConstants.ARM_UNDER_STAGE_ANGLE_THRESHOLD;
 
 
@@ -50,6 +53,9 @@ public class RobotContainer implements Constants.AutoConstants {
     private final SwerveDrive swerveDrive = new SwerveDrive();
     private final NotePlayerSubsystem notePlayerSubsystem = new NotePlayerSubsystem();
     private final BlinkinSubsystem blinkin = BlinkinSubsystem.getInstance();
+    private final ShooterModule shooterModule = new ShooterModule();
+
+    private final IndexerModule indexer = new IndexerModule();
 
     private final ClimberSubsystem climberSubsystem = ClimberSubsystem.getInstance();
 
@@ -163,12 +169,24 @@ public class RobotContainer implements Constants.AutoConstants {
         intakeNote.whileTrue(Commands.waitUntil(RobotState.getInstance()::isNoteIsAvailable).andThen(notePlayerSubsystem.intakeNote()));
 
         driver.leftBumper().onTrue(notePlayerSubsystem.scoreNote());
+        //driver.leftTrigger().whileTrue(notePlayerSubsystem.shootNote());
 
 //        driver.povCenter().onFalse(swerveDrive.tuneSteering(driver.getHID()::getPOV));
 
         auxDriver.b().whileTrue(notePlayerSubsystem.aimAndSpinUpForSpeaker());
         auxDriver.a().onTrue(notePlayerSubsystem.prepForPickup());
-        auxDriver.y().onTrue(notePlayerSubsystem.prepForAmp());
+        // auxDriver.x().onTrue(notePlayerSubsystem.shootFromSubwooferCommand());
+        // auxDriver.x().onFalse(notePlayerSubsystem.stopShooter());
+        auxDriver.x().onTrue(notePlayerSubsystem.overrideBeamBreak());
+        auxDriver.x().onFalse(notePlayerSubsystem.fixBeamBreak());
+
+        auxDriver.y().onTrue(notePlayerSubsystem.rotateArmToDegrees(ARM_AMP_ANGLE));
+
+        driver.rightTrigger().onTrue(notePlayerSubsystem.stopIndexer());
+       // auxDriver.y().onTrue(notePlayerSubsystem.prepForAmp());
+        // auxDriver.a().onTrue(notePlayerSubsystem.rotateArmToDegrees(53.5));
+        // auxDriver.b().onTrue(notePlayerSubsystem.rotateArmToDegrees(40));
+        // auxDriver.x().onTrue(notePlayerSubsystem.rotateArmToDegrees(-55));
 
         auxDriver.leftBumper().whileTrue(notePlayerSubsystem.reverseEject());
         auxDriver.rightBumper().whileTrue(notePlayerSubsystem.forwardEject());
@@ -183,8 +201,9 @@ public class RobotContainer implements Constants.AutoConstants {
         auxDriver.povRight().whileTrue(notePlayerSubsystem.shootFromSubwooferCommand());
 
         auxDriver.rightTrigger().whileTrue(notePlayerSubsystem.intakeNote());
+        auxDriver.leftTrigger().whileTrue(notePlayerSubsystem.shootInAmp());
 
-        auxDriver.rightStick().onTrue(notePlayerSubsystem.rotateArmToDegrees(50));
+        auxDriver.rightStick().onTrue(notePlayerSubsystem.rotateArmToDegrees(40));
 
         auxDriver.leftStick().whileTrue(new RunCommand(() -> notePlayerSubsystem.getIndexer().spin(0.5))
                 .finallyDo(() -> notePlayerSubsystem.getIndexer().stop()));

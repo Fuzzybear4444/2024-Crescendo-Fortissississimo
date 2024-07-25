@@ -41,7 +41,7 @@ public class NotePlayerCTREConfigs implements Constants.NotePlayerConstants, Con
         shooterConfig.OpenLoopRamps.VoltageOpenLoopRampPeriod = 0.75;
 
         // Inverted
-        shooterConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        shooterConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         /* *** Intake Configs *** */
         // Current Limits
@@ -57,6 +57,8 @@ public class NotePlayerCTREConfigs implements Constants.NotePlayerConstants, Con
         intakeConfig.Slot0.kP = 0.0;
         intakeConfig.Slot0.kI = 0.0;
         intakeConfig.Slot0.kD = 0.0;
+
+        intakeConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         // Closed-Loop ramps
         intakeConfig.ClosedLoopRamps.DutyCycleClosedLoopRampPeriod = 0.6;

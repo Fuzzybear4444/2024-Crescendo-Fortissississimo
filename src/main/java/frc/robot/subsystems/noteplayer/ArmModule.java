@@ -26,7 +26,7 @@ public class ArmModule implements Constants.NotePlayerConstants {
     private final SparkPIDController rightController;
     private final SparkRelativeEncoder rightEncoder;
 
-    private final double gravityFF = 0.07;
+    private final double gravityFF = 0.045;
 
     private Double setPosition;
 
@@ -63,11 +63,11 @@ public class ArmModule implements Constants.NotePlayerConstants {
 
     public double shooterDegreesToMotorRotations(double degrees) {
         //System.out.println("Setting Arm Position: " + (-degrees*motorRotationsPerArmDegree));
-        return degrees * ARM_MOTOR_ROTATIONS_PER_SHOOTER_DEGREE;
+        return -degrees/360 / ARM_GEAR_RATIO;
     }
 
     public void resetMotorEncoderToAbsolute() {
-        double newPosition = getShooterDegrees() * ARM_MOTOR_ROTATIONS_PER_SHOOTER_DEGREE;
+        double newPosition = shooterDegreesToMotorRotations(getShooterDegrees());
 
         leftEncoder.setPosition(newPosition);
     }
@@ -149,6 +149,7 @@ public class ArmModule implements Constants.NotePlayerConstants {
         leftMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kForward, true);
         leftMotor.enableSoftLimit(CANSparkBase.SoftLimitDirection.kReverse, true);
 
+        leftMotor.setInverted(true);
         rightMotor.follow(leftMotor, true);
 
         // Keep the breaks on so the arm doesn't slam down when disabled
@@ -166,6 +167,7 @@ public class ArmModule implements Constants.NotePlayerConstants {
             double sineScalar = Math.sin(Math.toRadians(getShooterDegrees() - ARM_BALANCE_DEGREES));
             double feedForward = gravityFF * sineScalar;
             int pidSlot = getPidSlot(sineScalar);
+            SmartDashboard.putNumber("Sine Scalar", sineScalar);
 
             //System.out.println("Current Position: " + leftEncoder.getPosition() + ", Set Position: " + setPosition + ", Profile slot: " + pidSlot);
 
@@ -180,6 +182,8 @@ public class ArmModule implements Constants.NotePlayerConstants {
 //            SmartDashboard.putNumber("Shooter Degrees", getShooterDegrees());
         }
 
+
+
         // Calculate feed forward based on angle to counteract gravity
 //        double sineScalar = Math.sin(Math.toRadians(getShooterDegrees() - ARM_BALANCE_DEGREES));
 //        double feedForward = gravityFF * sineScalar;
@@ -190,7 +194,7 @@ public class ArmModule implements Constants.NotePlayerConstants {
 //        }
         if (RobotState.isDisabled()) {
             resetMotorEncoderToAbsolute();
-            setPosition = getShooterDegrees() * ARM_MOTOR_ROTATIONS_PER_SHOOTER_DEGREE;
+            setPosition = shooterDegreesToMotorRotations(getShooterDegrees());
         }
         //System.out.println("Shooter Angle: " + getShooterDegrees());
 //        if (isAtSetPosition()) {
@@ -198,7 +202,12 @@ public class ArmModule implements Constants.NotePlayerConstants {
 //        } else {
 //            System.out.println("Arm set position: " + setPosition + ", Actual: " + leftEncoder.getPosition() + ", Arm Degrees: " + getArmDegrees() * motorRotationsPerArmDegree);
 //        }
+
+        SmartDashboard.putNumber("Arm Motor Position", leftEncoder.getPosition());
+        SmartDashboard.putNumber("Arm Motor Set Position", setPosition);
+        SmartDashboard.putNumber("Shooter Degrees", getShooterDegrees());
     }
+
 
     private int getPidSlot(double sineScalar) {
         int pidSlot;
